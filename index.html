@@ -20,7 +20,7 @@ function computerPlay() {
     }
 }
 
-function singleRound(playerSelection, computerSelection) {
+function playRound(playerSelection, computerSelection) {
     playerSelection = playerSelection.toLowerCase();
     let str = playerSelection + computerSelection;
     switch (str) {
@@ -43,9 +43,37 @@ function singleRound(playerSelection, computerSelection) {
         case 'paperscissors':
             return 'You lose! Scissors beats paper';
     }
+    return '';
 }
 
+function game(count) {
+    let player;
+    let computer;
+    let result;
+    let playerScores = 0;
+    let computerScores = 0;
+    for (let i = 0; i < count; i++) {
+        player = prompt('Enter rock, paper or scissors:');
+        computer = computerPlay();
+        result = playRound(player, computer);
+        console.log(result);
+        if (result.search(/You win/) === 0) {
+            playerScores++;
+        } else if (result.search(/You lose/) === 0) {
+            computerScores++;
+        } 
+    }
+    console.log(`${playerScores} : ${computerScores}`);
+    if (playerScores > computerScores) {
+        console.log('You win!');
+    } else if (computerScores > playerScores) {
+        console.log('You lose...');
+    } else {
+        console.log('Tie.');
+    }
+}
 
+game(5);
 </script>
 
 </body>
