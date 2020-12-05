@@ -3,11 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/89144dc9c5.js" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap" rel="stylesheet">
     <title>Rock Paper Scissors</title>
+    <style>
+        .container {
+            font-family: 'JetBrains Mono', monospace;
+            width: 500px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .fas {
+            font-size: 80px;
+            cursor: pointer;
+        }
+        h2 {
+            margin-bottom: 40px;
+        }
+        .clicked {
+            font-size: 100px;
+        }
+        .hands {
+            display: flex;
+            justify-content: space-evenly;
+            width: 100%;
+            height: 150px;
+        }
+        i {
+            display: inline-block;
+            width: 33%;
+        }
+        #result {
+            max-height: 200px;
+            overflow: auto;
+            border: 1px solid black;
+        }
+        #finish {
+            color: crimson;
+        }
+    </style>
 </head>
 <body>
 
+<div class="container">
+    <h1>Rock Paper Scissors</h1>
+    <h2>Play!</h2>
+    <div class='hands'>
+        <i class="fas fa-hand-rock" id = "rock"></i>
+        <i class="fas fa-hand-paper" id = "paper"></i>
+        <i class="fas fa-hand-scissors" id = "scissors"></i>
+    </div>
+    <div id="result"></div>
+    <h2 id="finish"></h2>
+</div>
+
 <script>
+let player;
+let computer;
+let result;
+let playerScores = 0;
+let computerScores = 0;
+
+const items = Array.from(document.querySelectorAll('.fas'));
+items.forEach (item => item.addEventListener('click', itemClick));
+
+function itemClick(e) {
+    if (playerScores === 5 || computerScores === 5) beginGame();
+    e.target.classList.add('clicked');
+    setTimeout(function () {e.target.classList.remove('clicked');}, 200);
+    player = e.target.id;
+    computer = computerPlay();
+    playRound(player, computer);
+}
+
+function beginGame() {
+    playerScores = 0;
+    computerScores = 0;
+    document.querySelector("#finish").textContent = "";
+    document.querySelector('#result').innerHTML = "";
+}
 
 function computerPlay() {
     let play = Math.random();
@@ -25,55 +100,51 @@ function playRound(playerSelection, computerSelection) {
     let str = playerSelection + computerSelection;
     switch (str) {
         case 'rockrock':
-            return 'Tie! Rock vs rock';
+            result = 'Tie! Rock vs rock';
+            break;
         case 'paperpaper':
-            return 'Tie! Paper vs paper';
+            result = 'Tie! Paper vs paper';
+            break;
         case 'scissorsscissors':
-            return 'Tie! Scissors vs scissors';
+            result = 'Tie! Scissors vs scissors';
+            break;
         case 'rockscissors':
-            return 'You win! Rock beats scissors';
+            result = 'You win! Rock beats scissors';
+            break;
         case 'scissorspaper':
-            return 'You win! Scissors beats paper';
+            result = 'You win! Scissors beats paper';
+            break;
         case 'paperrock':
-            return 'You win! Paper beats rock';
+            result = 'You win! Paper beats rock';
+            break;
         case 'rockpaper':
-            return 'You lose! Paper beats rock';
+            result = 'You lose! Paper beats rock';
+            break;
         case 'scissorsrock':
-            return 'You lose! Rock beats scissors';
+            result = 'You lose! Rock beats scissors';
+            break;
         case 'paperscissors':
-            return 'You lose! Scissors beats paper';
+            result = 'You lose! Scissors beats paper';
+            break;
     }
-    return '';
-}
-
-function game(count) {
-    let player;
-    let computer;
-    let result;
-    let playerScores = 0;
-    let computerScores = 0;
-    for (let i = 0; i < count; i++) {
-        player = prompt('Enter rock, paper or scissors:');
-        computer = computerPlay();
-        result = playRound(player, computer);
-        console.log(result);
-        if (result.search(/You win/) === 0) {
-            playerScores++;
-        } else if (result.search(/You lose/) === 0) {
-            computerScores++;
-        } 
+    const divResult = document.querySelector('#result');
+    const newResult = document.createElement('p');
+    if (result.search(/You win/) === 0) {
+        playerScores++;
+    } else if (result.search(/You lose/) === 0) {
+        computerScores++;
+    } 
+    newResult.textContent = result + 
+        `   -   ${playerScores} : ${computerScores}`;
+    divResult.prepend(newResult);
+    if (playerScores === 5) {
+        document.querySelector('#finish').textContent = "Game over! You win!";
     }
-    console.log(`${playerScores} : ${computerScores}`);
-    if (playerScores > computerScores) {
-        console.log('You win!');
-    } else if (computerScores > playerScores) {
-        console.log('You lose...');
-    } else {
-        console.log('Tie.');
+    if (computerScores === 5) {
+        document.querySelector("#finish").textContent = "Game over! You lose...";
     }
 }
 
-game(5);
 </script>
 
 </body>
